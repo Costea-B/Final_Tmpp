@@ -1,6 +1,9 @@
 using App.Abstraction;
+using App.Templates;
 using App.User;
+using Infrastructure.Abstraction;
 using Infrastructure.DbContext;
+using Infrastructure.Repository;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -25,6 +28,8 @@ builder.Services.AddSingleton<ILoggerService>(_ => LoggerService.Instance);
 builder.Services.AddScoped<ILoginServices, LoginService>();
 builder.Services.Decorate<ILoginServices, LoginServiceProxy>();
 builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
+builder.Services.AddScoped<ITemplatesServices, TemplatesServices>();
+builder.Services.AddScoped<ITemplatesRepository, TemplatesRepository>();
 
 
 builder.Services.AddControllers();
