@@ -35,5 +35,11 @@ namespace Web.Controllers
                await _templatesServices.CreateTemplates(templates);
                return Ok();
           }
+
+          [HttpPost]
+          public async Task<IActionResult> CopyTemplates([FromQuery] Guid templates)
+          {
+              return Ok();
+          }
      }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Domain.RequestDto
 {
-     public class TemplatesCreateRequest
+     public class TemplatesCreateRequest 
      {
           public string Name { get; set; }
           public string Description { get; set; }
