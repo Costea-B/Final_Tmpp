@@ -1,4 +1,7 @@
 using App.Abstraction;
+using App.Facede;
+using App.NotificationDecorator;
+using App.Services;
 using App.Templates;
 using App.User;
 using Infrastructure.Abstraction;
@@ -30,6 +33,19 @@ builder.Services.Decorate<ILoginServices, LoginServiceProxy>();
 builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 builder.Services.AddScoped<ITemplatesServices, TemplatesServices>();
 builder.Services.AddScoped<ITemplatesRepository, TemplatesRepository>();
+builder.Services.AddScoped<NotificationService>(); // Serviciul de baz?
+
+builder.Services.AddScoped<INotificationService>(sp =>
+{
+     var baseService = sp.GetRequiredService<NotificationService>();
+     var withLogging = new LoggingNotificationDecorator(baseService);
+     var withRetry = new RetryNotificationDecorator(withLogging);
+     return withRetry;
+});
+
+builder.Services.AddScoped<ReservationServices>();
+builder.Services.AddScoped<ReservationFacade>();
+
 
 
 builder.Services.AddControllers();

@@ -1,4 +1,5 @@
-﻿using Infrastructure.Services;
+﻿using App.Facede;
+using Infrastructure.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,10 +10,12 @@ namespace Web.Controllers
      public class test : ControllerBase
      {
           private readonly ILoggerService _logger;
+          private readonly ReservationFacade _reservationFacade;
 
-          public test(ILoggerService logger)
+          public test(ILoggerService logger, ReservationFacade reservationFacade)
           {
                _logger = logger;
+               _reservationFacade = reservationFacade;
           }
 
           [HttpGet("info")]
@@ -42,6 +45,13 @@ namespace Web.Controllers
                     _logger.LogError("An error occurred in the API controller", ex);
                     return BadRequest("Error logged successfully");
                }
+          }
+
+          [HttpPost("make-reservation")]
+          public IActionResult MakeReservation([FromQuery] string email, [FromQuery] DateTime date, [FromQuery] int persons)
+          {
+               _reservationFacade.MakeReservation(email, date, persons);
+               return Ok("Rezervarea a fost trimisă.");
           }
      }
 }

@@ -5,10 +5,11 @@ using System.Net.Mail;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using App.Abstraction;
 
 namespace App.Services
 {
-     public class NotificationService
+     public class NotificationService : INotificationService
      {
           public void SendConfirmationEmail(string toEmail, string subject, string body)
           {

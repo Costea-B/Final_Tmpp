@@ -1,4 +1,6 @@
-﻿using App.Services;
+﻿using App.Abstraction;
+using App.NotificationDecorator;
+using App.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,15 +9,23 @@ using System.Threading.Tasks;
 
 namespace App.Facede
 {
+
+     // Facade cu Decorator aplicat
      public class ReservationFacade
      {
           private readonly ReservationServices _reservationService;
-          private readonly NotificationService _notificationService;
+          private readonly INotificationService _notificationService;
 
           public ReservationFacade()
           {
                _reservationService = new ReservationServices();
-               _notificationService = new NotificationService();
+
+               // Compunere Decoratori
+               var baseNotification = new NotificationService();
+               var loggingDecorator = new LoggingNotificationDecorator(baseNotification);
+               var retryDecorator = new RetryNotificationDecorator(loggingDecorator);
+
+               _notificationService = retryDecorator;
           }
 
           public async void MakeReservation(string clientEmail, DateTime date, int persons)
