@@ -12,7 +12,24 @@ namespace Infrastructure.DbContext
           }
           public DbSet<Template> Templates { get; set; }
 
-          // poți adăuga și DbSet-uri pentru alte tabele aici
-          // public DbSet<Product> Products { get; set; }
+          public DbSet<Restaurant> Restaurants { get; set; }
+          public DbSet<Table> Tables { get; set; }
+          public DbSet<TableReservation> TableReservations { get; set; }
+
+          protected override void OnModelCreating(ModelBuilder modelBuilder)
+          {
+               base.OnModelCreating(modelBuilder);
+
+               modelBuilder.Entity<TableReservation>()
+                   .HasKey(tr => new { tr.TableId, tr.ReservationId });
+
+               modelBuilder.Entity<TableReservation>()
+                   .HasOne(tr => tr.Table)
+                   .WithMany(t => t.TableReservations)
+                   .HasForeignKey(tr => tr.TableId)
+                   .OnDelete(DeleteBehavior.Restrict);
+
+
+          }
      }
 }

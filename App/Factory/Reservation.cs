@@ -11,14 +11,14 @@ namespace App.Factory
      {
           private readonly ITableAllocationStrategy _strategy;
 
-          public StandartReservation()
+          public StandartReservation(ITableAllocationStrategy strategy)
           {
-               _strategy = new SimpleAllocationStrategy();
+               _strategy = strategy;
           }
 
-          public string Allocate(int guests)
+          public string Allocate(int guests, string userId, int restaurantId)
           {
-               return _strategy.AllocateTable(guests);
+               return _strategy.AllocateTable(guests, userId, restaurantId);
           }
      }
 
@@ -26,14 +26,14 @@ namespace App.Factory
      {
           private readonly ITableAllocationStrategy _strategy;
 
-          public VipReservation()
+          public VipReservation(ITableAllocationStrategy strategy)
           {
-               _strategy = new VipAllocationStrategy();
+               _strategy = strategy;
           }
 
-          public string Allocate(int guests)
+          public string Allocate(int guests, string userId, int restaurantId)
           {
-               return _strategy.AllocateTable(guests);
+               return _strategy.AllocateTable(guests, userId, restaurantId);
           }
      }
 
@@ -41,15 +41,16 @@ namespace App.Factory
      {
           private readonly ITableAllocationStrategy _strategy;
 
-          public EventReservation()
+          public EventReservation(ITableAllocationStrategy strategy)
           {
-               _strategy = new EventAllocationStrategy();
+               _strategy = strategy;
           }
 
-          public string Allocate(int guests)
+          public string Allocate(int guests, string userId, int restaurantId)
           {
-               return _strategy.AllocateTable(guests);
+               return _strategy.AllocateTable(guests, userId, restaurantId);
           }
      }
+
 
 }

@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace App.Factory
 {
-     public interface IReservation
+     public interface IReservationFactory
      {
-          string Allocate(int guests, string userId, int restaurantId);
+          IReservation CreateReservation(string type);
      }
+
 }

@@ -1,4 +1,5 @@
 ﻿using App.Facede;
+using App.Factory;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,11 +12,13 @@ namespace Web.Controllers
      {
           private readonly ILoggerService _logger;
           private readonly ReservationFacade _reservationFacade;
+          private readonly IReservationFactory _factory;
 
-          public test(ILoggerService logger, ReservationFacade reservationFacade)
+          public test(ILoggerService logger, ReservationFacade reservationFacade, IReservationFactory factory)
           {
                _logger = logger;
                _reservationFacade = reservationFacade;
+               _factory = factory;
           }
 
           [HttpGet("info")]
@@ -52,6 +55,21 @@ namespace Web.Controllers
           {
                _reservationFacade.MakeReservation(email, date, persons);
                return Ok("Rezervarea a fost trimisă.");
+          }
+
+          [HttpPost("allocate")]
+          public IActionResult Allocate([FromQuery] string type, [FromQuery] int guests, [FromQuery] string userId, [FromQuery] int restaurantId)
+          {
+            try
+            {
+                var reservation = _factory.CreateReservation(type);
+                var result = reservation.Allocate(guests, userId, restaurantId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
           }
      }
 }

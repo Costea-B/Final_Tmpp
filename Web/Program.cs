@@ -1,7 +1,9 @@
 using App.Abstraction;
 using App.Facede;
+using App.Factory;
 using App.NotificationDecorator;
 using App.Services;
+using App.Strategy;
 using App.Templates;
 using App.User;
 using Infrastructure.Abstraction;
@@ -34,6 +36,15 @@ builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 builder.Services.AddScoped<ITemplatesServices, TemplatesServices>();
 builder.Services.AddScoped<ITemplatesRepository, TemplatesRepository>();
 builder.Services.AddScoped<NotificationService>(); // Serviciul de baz?
+builder.Services.AddScoped<SimpleAllocationStrategy>();
+builder.Services.AddScoped<VipAllocationStrategy>();
+builder.Services.AddScoped<EventAllocationStrategy>();
+
+builder.Services.AddScoped<ReservationFactory>();
+builder.Services.AddScoped<IReservationFactory>(sp =>
+     new ReservationFactory(sp));
+
+
 
 builder.Services.AddScoped<INotificationService>(sp =>
 {
@@ -45,6 +56,8 @@ builder.Services.AddScoped<INotificationService>(sp =>
 
 builder.Services.AddScoped<ReservationServices>();
 builder.Services.AddScoped<ReservationFacade>();
+builder.Services.AddReservationRepository(); // Adaugat ReservationRepository
+
 
 
 

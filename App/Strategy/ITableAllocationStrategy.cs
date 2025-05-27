@@ -8,6 +8,6 @@ namespace App.Strategy
 {
      public interface ITableAllocationStrategy
      {
-          string AllocateTable(int guests);
+          string AllocateTable(int guests, string userId, int restaurantId);
      }
 }
