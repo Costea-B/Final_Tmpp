@@ -25,7 +25,8 @@ namespace App.User
                var claims = new[]
                {
                new Claim(ClaimTypes.NameIdentifier, user.Id),
-               new Claim(ClaimTypes.Email, user.Email)
+               new Claim(ClaimTypes.Email, user.Email),
+               new Claim(ClaimTypes.AuthorizationDecision, user.Id)
                // poți adăuga și roluri
                };
 

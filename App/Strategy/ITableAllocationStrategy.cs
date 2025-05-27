@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace App.Factory
+namespace App.Strategy
 {
-     public interface IReservation
+     public interface ITableAllocationStrategy
      {
-          string Allocate(int guests);
+          string AllocateTable(int guests);
      }
 }

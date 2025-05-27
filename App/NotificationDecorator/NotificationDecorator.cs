@@ -1,4 +1,5 @@
 ﻿using App.Abstraction;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +20,8 @@ namespace App.NotificationDecorator
           public virtual void SendConfirmationEmail(string toEmail, string subject, string body)
           {
                _inner.SendConfirmationEmail(toEmail, subject, body);
-          }
+          }         
+          
+
      }
 }

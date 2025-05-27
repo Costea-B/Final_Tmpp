@@ -37,7 +37,7 @@ namespace App.User
           {
                var user = new Users
                {
-                    UserName = "Costea",
+                    UserName = email,
                     Email = email
                };
 

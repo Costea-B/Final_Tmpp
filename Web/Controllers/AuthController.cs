@@ -22,8 +22,7 @@ namespace Web.Controllers
                
 
                var token = await _loginService.Login(request.Email, request.Password);
-
-               // Setăm cookie-ul
+               
                Response.Cookies.Append("jwt", token, new CookieOptions
                {
                     HttpOnly = true,

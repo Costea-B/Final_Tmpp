@@ -54,7 +54,16 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 
-
+builder.Services.AddCors(option =>
+{
+     option.AddPolicy("Policy", builder =>
+     {
+          builder.WithOrigins("http://localhost:3000")
+                   .AllowAnyHeader()
+                   .AllowAnyMethod()
+                   .AllowCredentials();
+     });
+});
 
 var app = builder.Build();
 
@@ -66,6 +75,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors("Policy");
 
 app.UseAuthorization();
 
