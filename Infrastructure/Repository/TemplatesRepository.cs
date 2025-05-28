@@ -21,14 +21,15 @@ namespace Infrastructure.Repository
                _logger = logger;
                _context = dbContext;
           }
-          public async Task Createtempaltes(string json)
+          public async Task Createtempaltes(Template json)
           {
                try
                {
-                    if (string.IsNullOrWhiteSpace(json)) return;
+                    if (json is null) return;
                     var template = new Template
                     {
-                         JsonTemplate = json,
+                         JsonTemplate = json.JsonTemplate,
+                         Type = json.Type,
                     };
                     await _context.Templates.AddAsync(template);
                     await _context.SaveChangesAsync();
@@ -44,6 +45,10 @@ namespace Infrastructure.Repository
                return await _context.Templates
                              .Select(t => t.JsonTemplate)
                              .ToListAsync();
+          }
+          public async Task<Template> GetTemplateByIdAsync(Guid id)
+          {
+              return await _context.Templates.FirstOrDefaultAsync(t => t.Id == id);
           }
      }
 }

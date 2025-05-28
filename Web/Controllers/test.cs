@@ -1,5 +1,6 @@
 ﻿using App.Facede;
 using App.Factory;
+using Domain.Enum;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,12 +14,14 @@ namespace Web.Controllers
           private readonly ILoggerService _logger;
           private readonly ReservationFacade _reservationFacade;
           private readonly IReservationFactory _factory;
+          private readonly App.Services.ReservationStateService _reservationStateService;
 
-          public test(ILoggerService logger, ReservationFacade reservationFacade, IReservationFactory factory)
+          public test(ILoggerService logger, ReservationFacade reservationFacade, IReservationFactory factory, App.Services.ReservationStateService reservationStateService)
           {
-               _logger = logger;
-               _reservationFacade = reservationFacade;
-               _factory = factory;
+            _logger = logger;
+            _reservationFacade = reservationFacade;
+            _factory = factory;
+            _reservationStateService = reservationStateService;
           }
 
           [HttpGet("info")]
@@ -51,9 +54,9 @@ namespace Web.Controllers
           }
 
           [HttpPost("make-reservation")]
-          public IActionResult MakeReservation([FromQuery] string email, [FromQuery] DateTime date, [FromQuery] int persons)
+          public IActionResult MakeReservation([FromQuery] string email, [FromQuery] DateTime date, [FromQuery] int persons, [FromQuery] int restaurantId, [FromQuery] int reservationTypeId)
           {
-               _reservationFacade.MakeReservation(email, date, persons);
+               _reservationFacade.MakeReservation(email, date, persons, restaurantId, reservationTypeId);
                return Ok("Rezervarea a fost trimisă.");
           }
 
@@ -70,6 +73,15 @@ namespace Web.Controllers
             {
                 return BadRequest(ex.Message);
             }
+          }
+
+          [HttpPost("update-reservation-state")]
+          public async Task<IActionResult> UpdateReservationState([FromQuery] int reservationId, [FromQuery] ReservationState newState)
+          {
+              var result = await _reservationStateService.UpdateReservationStateAsync(reservationId, newState);
+              if (result)
+                  return Ok("Starea rezervării a fost actualizată.");
+              return NotFound("Rezervarea nu a fost găsită sau eroare la actualizare.");
           }
      }
 }

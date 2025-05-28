@@ -16,9 +16,9 @@ namespace App.Facede
           private readonly ReservationServices _reservationService;
           private readonly INotificationService _notificationService;
 
-          public ReservationFacade()
+          public ReservationFacade(ReservationServices reservation)
           {
-               _reservationService = new ReservationServices();
+               _reservationService = reservation;
 
                // Compunere Decoratori
                var baseNotification = new NotificationService();
@@ -28,16 +28,25 @@ namespace App.Facede
                _notificationService = retryDecorator;
           }
 
-          public async void MakeReservation(string clientEmail, DateTime date, int persons)
+          public async void MakeReservation(string clientEmail, DateTime date, int persons, int restaurantId, int reservationTypeId)
           {
-               var success = await _reservationService.CreateReservation(clientEmail, date, persons);
+              var reservation = new Domain.DbModel.Reservation
+              {
+                  UserId = clientEmail, // Presupunem că UserId = clientEmail pentru exemplu
+                  Date = date,
+                  NumberOfGuests = persons,
+                  RestaurantId = restaurantId,
+                  ReservationTypeId = reservationTypeId,
+                  State = Domain.Enum.ReservationState.New
+              };
+              var success = await _reservationService.CreateReservationAsync(reservation);
 
-               if (success)
-               {
-                    var subject = "Confirmare Rezervare";
-                    var body = $"Rezervarea dvs. pentru {date} a fost confirmată.";
-                    _notificationService.SendConfirmationEmail(clientEmail, subject, body);
-               }
+              if (success)
+              {
+                  var subject = "Confirmare Rezervare";
+                  var body = $"Rezervarea dvs. pentru {date} a fost confirmată.";
+                  _notificationService.SendConfirmationEmail(clientEmail, subject, body);
+              }
           }
      }
 }

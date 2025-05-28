@@ -14,6 +14,7 @@ namespace Infrastructure.DbContext
 
           public DbSet<Restaurant> Restaurants { get; set; }
           public DbSet<Table> Tables { get; set; }
+          public DbSet<Reservation> Reservation { get; set; }
           public DbSet<TableReservation> TableReservations { get; set; }
 
           protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -3,15 +3,29 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using App.ChainOfResponsibility;
+using Domain.DbModel;
+using Infrastructure.Abstraction;
 
 namespace App.Services
 {
     public class ReservationServices
     {
-        public async Task<bool> CreateReservation(string clientEmail, DateTime date, int persons)
+        private readonly ReservationValidationService _validationService;
+        private readonly IReservationRepository _reservationRepository;
+
+        public ReservationServices(ReservationValidationService validationService, IReservationRepository reservationRepository)
         {
-            // Logica de rezervare
-            Console.WriteLine($"Rezervare creată pentru {clientEmail} la {date} pentru {persons} persoane.");
+            _validationService = validationService;
+            _reservationRepository = reservationRepository;
+        }
+
+        public async Task<bool> CreateReservationAsync(Reservation reservation)
+        {
+            var isValid = await _validationService.ValidateAsync(reservation);
+            if (!isValid)
+                return false;
+            await _reservationRepository.AddReservationAsync(reservation);
             return true;
         }
     }

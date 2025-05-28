@@ -23,6 +23,8 @@ namespace Domain.DbModel
 
           public int RestaurantId { get; set; }
           public Restaurant Restaurant { get; set; }
+
+          public ReservationState State { get; set; } = ReservationState.New;
      }
 
 }

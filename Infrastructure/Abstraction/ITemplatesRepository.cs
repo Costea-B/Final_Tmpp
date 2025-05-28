@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.DbModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +9,8 @@ namespace Infrastructure.Abstraction
 {
      public interface ITemplatesRepository
      {
-          Task Createtempaltes(string json);
+          Task Createtempaltes(Template json);
           Task<List<string>> GetTemplates();
+          Task<Template> GetTemplateByIdAsync(Guid id);
      }
 }

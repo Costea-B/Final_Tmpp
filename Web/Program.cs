@@ -1,4 +1,5 @@
 using App.Abstraction;
+using App.ChainOfResponsibility;
 using App.Facede;
 using App.Factory;
 using App.NotificationDecorator;
@@ -57,8 +58,27 @@ builder.Services.AddScoped<INotificationService>(sp =>
 builder.Services.AddScoped<ReservationServices>();
 builder.Services.AddScoped<ReservationFacade>();
 builder.Services.AddReservationRepository(); // Adaugat ReservationRepository
+builder.Services.AddScoped<App.Services.ReservationStateService>();
+builder.Services.AddScoped<Infrastructure.Abstraction.ITableRepository, Infrastructure.Repository.TableRepository>();
+builder.Services.AddScoped<App.Abstraction.IPrototypeTemplate, App.Templates.TemplatePrototype>();
+builder.Services.AddScoped<App.Services.ReservationQueryService>();
+builder.Services.AddScoped<IRestaurantRepository, RestaurantRepository>();
 
+// Chain of Responsibility handlers registration
+builder.Services.AddScoped<GuestsValidationHandler>();
+builder.Services.AddScoped<DateValidationHandler>();
+builder.Services.AddScoped<RestaurantValidationHandler>();
 
+// Chain builder for ReservationValidationService
+builder.Services.AddScoped<ReservationValidationService>(sp =>
+{
+    var guestsHandler = sp.GetRequiredService<GuestsValidationHandler>();
+    var dateHandler = sp.GetRequiredService<DateValidationHandler>();
+    var restaurantHandler = sp.GetRequiredService<RestaurantValidationHandler>();
+    guestsHandler.SetNext(dateHandler);
+    dateHandler.SetNext(restaurantHandler);
+    return new ReservationValidationService(guestsHandler);
+});
 
 
 builder.Services.AddControllers();

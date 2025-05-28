@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Text.Json;
+using Domain.DbModel;
 
 namespace App.Templates
 {
@@ -19,8 +20,12 @@ namespace App.Templates
           }
           public async Task CreateTemplates(TemplatesCreateRequest templates)
           {
-               string json = JsonSerializer.Serialize(templates);
-               await _templatesRepository.Createtempaltes(json);
+               var template = new Template()
+               {
+                    JsonTemplate = JsonSerializer.Serialize(templates),
+                    Type = templates.Type,
+               };
+               await _templatesRepository.Createtempaltes(template);
           }
 
           public async Task<List<string>> GetTemplates()

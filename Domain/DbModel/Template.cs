@@ -16,5 +16,8 @@ namespace Domain.DbModel
           [Required]
           [Column(TypeName = "nvarchar(max)")]
           public string JsonTemplate {  get; set; }
+          [Required]
+          [Column(TypeName = "nvarchar(100)")]
+          public string Type { get; set; } // ex: Lunch, Dinner, etc.
      }
 }
